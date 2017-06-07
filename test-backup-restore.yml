@@ -1,0 +1,4 @@
+- hosts: katello
+  remote_user: root
+  roles:
+    - backup

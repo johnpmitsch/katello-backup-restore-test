@@ -1,0 +1,47 @@
+- name: Check that mandatory variables are updated
+  fail: msg="Please update the variables in inventory/inventory (after copying inventory/inventory.sample)"
+  when: pr_number == "changeme" and not use_master_branch
+
+- name: install the latest version of git
+  yum:
+    name: git
+    state: latest
+
+- name: clone katello-packaging
+  git:
+    repo: https://github.com/Katello/katello-packaging.git 
+    dest: /katello-packaging
+    refspec: '+refs/pull/*:refs/heads/*'
+
+- name: checkout PR branch
+  command: git checkout {{ pr_number }}/head
+  args:
+    chdir: /katello-packaging
+  when: not use_master_branch
+
+- name: creates backup directory
+  file: 
+    path: /backup
+    state: directory
+
+- name: run katello-backup
+  command: /katello-packaging/katello/katello-backup /backup
+  register: backup_output
+  become: root
+
+- name: copy backup output to file
+  local_action: copy content={{ backup_output }} dest=/tmp/online-backup.txt
+
+- name: get backup directory
+  shell: "sed -n 2p /tmp/online-backup.txt | awk '{print $4}'"
+  register: backup_dir
+
+- name: check backup directory for config files
+  stat:
+    path: "{{ backup_dir }}/config_files.tar.gz"
+  register: config_files
+
+- name: fail if config files are not present
+  fail:
+    msg: "config_files.tar.gz are not present in backup directory"
+  when: not config_files.stat.exists

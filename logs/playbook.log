@@ -1,0 +1,149 @@
+2017-06-07 13:30:02,464 p=32378 u=jomitsch |  PLAY [katello] *****************************************************************
+2017-06-07 13:30:02,484 p=32378 u=jomitsch |  TASK [setup] *******************************************************************
+2017-06-07 13:30:02,484 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:02 -0400 (0:00:00.023)       0:00:00.023 ******** 
+2017-06-07 13:30:06,094 p=32378 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:30:06,096 p=32378 u=jomitsch |  TASK [backup : Check that mandatory variables are updated] *********************
+2017-06-07 13:30:06,096 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:06 -0400 (0:00:03.612)       0:00:03.635 ******** 
+2017-06-07 13:30:06,120 p=32378 u=jomitsch |  skipping: [192.168.121.46]
+2017-06-07 13:30:06,123 p=32378 u=jomitsch |  TASK [backup : install the latest version of git] ******************************
+2017-06-07 13:30:06,123 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:06 -0400 (0:00:00.026)       0:00:03.662 ******** 
+2017-06-07 13:30:10,355 p=32378 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:30:10,357 p=32378 u=jomitsch |  TASK [backup : clone katello-packaging] ****************************************
+2017-06-07 13:30:10,357 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:10 -0400 (0:00:04.233)       0:00:07.896 ******** 
+2017-06-07 13:30:11,270 p=32378 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:30:11,273 p=32378 u=jomitsch |  TASK [backup : checkout PR branch] *********************************************
+2017-06-07 13:30:11,273 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:11 -0400 (0:00:00.916)       0:00:08.812 ******** 
+2017-06-07 13:30:11,296 p=32378 u=jomitsch |  skipping: [192.168.121.46]
+2017-06-07 13:30:11,298 p=32378 u=jomitsch |  TASK [backup : creates backup directory] ***************************************
+2017-06-07 13:30:11,298 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:11 -0400 (0:00:00.025)       0:00:08.837 ******** 
+2017-06-07 13:30:11,553 p=32378 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:30:11,554 p=32378 u=jomitsch |  TASK [backup : run katello-backup] *********************************************
+2017-06-07 13:30:11,555 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:30:11 -0400 (0:00:00.256)       0:00:09.093 ******** 
+2017-06-07 13:35:07,989 p=32378 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:35:07,992 p=32378 u=jomitsch |  TASK [backup : copy backup output to file] *************************************
+2017-06-07 13:35:07,992 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:35:07 -0400 (0:04:56.437)       0:05:05.530 ******** 
+2017-06-07 13:35:08,350 p=32378 u=jomitsch |  changed: [192.168.121.46 -> localhost]
+2017-06-07 13:35:08,352 p=32378 u=jomitsch |  TASK [backup : get backup directory] *******************************************
+2017-06-07 13:35:08,352 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:35:08 -0400 (0:00:00.360)       0:05:05.891 ******** 
+2017-06-07 13:35:08,557 p=32378 u=jomitsch |  fatal: [192.168.121.46]: FAILED! => {"changed": true, "cmd": ["sed", "-n", "2p", "/tmp/online-backup.txt", "|", "awk", "{print $4}"], "delta": "0:00:00.003460", "end": "2017-06-07 17:35:08.538452", "failed": true, "rc": 2, "start": "2017-06-07 17:35:08.534992", "stderr": "sed: can't read |: No such file or directory\nsed: can't read awk: No such file or directory\nsed: can't read {print $4}: No such file or directory", "stdout": "Creating backup folder /backup/katello-backup-20170607170802", "stdout_lines": ["Creating backup folder /backup/katello-backup-20170607170802"], "warnings": ["Consider using template or lineinfile module rather than running sed"]}
+2017-06-07 13:35:08,558 p=32378 u=jomitsch |  	to retry, use: --limit @/home/jomitsch/katello-backup-restore-test/test-backup-restore.retry
+
+2017-06-07 13:35:08,558 p=32378 u=jomitsch |  PLAY RECAP *********************************************************************
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  192.168.121.46             : ok=6    changed=2    unreachable=0    failed=1   
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  Wednesday 07 June 2017  13:35:08 -0400 (0:00:00.206)       0:05:06.097 ******** 
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  =============================================================================== 
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : run katello-backup ------------------------------------------- 296.44s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : install the latest version of git ------------------------------ 4.23s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  setup ------------------------------------------------------------------- 3.61s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : clone katello-packaging ---------------------------------------- 0.92s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : copy backup output to file ------------------------------------- 0.36s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : creates backup directory --------------------------------------- 0.26s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : get backup directory ------------------------------------------- 0.21s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : Check that mandatory variables are updated --------------------- 0.03s
+2017-06-07 13:35:08,559 p=32378 u=jomitsch |  backup : checkout PR branch --------------------------------------------- 0.03s
+2017-06-07 13:36:58,140 p=32615 u=jomitsch |  PLAY [katello] *****************************************************************
+2017-06-07 13:36:58,161 p=32615 u=jomitsch |  TASK [setup] *******************************************************************
+2017-06-07 13:36:58,161 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:36:58 -0400 (0:00:00.025)       0:00:00.025 ******** 
+2017-06-07 13:37:00,070 p=32615 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:37:00,072 p=32615 u=jomitsch |  TASK [backup : Check that mandatory variables are updated] *********************
+2017-06-07 13:37:00,073 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:37:00 -0400 (0:00:01.911)       0:00:01.936 ******** 
+2017-06-07 13:37:00,097 p=32615 u=jomitsch |  skipping: [192.168.121.46]
+2017-06-07 13:37:00,100 p=32615 u=jomitsch |  TASK [backup : install the latest version of git] ******************************
+2017-06-07 13:37:00,100 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:37:00 -0400 (0:00:00.027)       0:00:01.964 ******** 
+2017-06-07 13:37:02,671 p=32615 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:37:02,674 p=32615 u=jomitsch |  TASK [backup : clone katello-packaging] ****************************************
+2017-06-07 13:37:02,674 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:37:02 -0400 (0:00:02.573)       0:00:04.537 ******** 
+2017-06-07 13:37:04,087 p=32615 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:37:04,089 p=32615 u=jomitsch |  TASK [backup : checkout PR branch] *********************************************
+2017-06-07 13:37:04,089 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:37:04 -0400 (0:00:01.415)       0:00:05.952 ******** 
+2017-06-07 13:37:04,121 p=32615 u=jomitsch |  skipping: [192.168.121.46]
+2017-06-07 13:37:04,124 p=32615 u=jomitsch |  TASK [backup : creates backup directory] ***************************************
+2017-06-07 13:37:04,124 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:37:04 -0400 (0:00:00.034)       0:00:05.987 ******** 
+2017-06-07 13:37:04,405 p=32615 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:37:04,407 p=32615 u=jomitsch |  TASK [backup : run katello-backup] *********************************************
+2017-06-07 13:37:04,407 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:37:04 -0400 (0:00:00.282)       0:00:06.270 ******** 
+2017-06-07 13:41:24,808 p=32615 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:41:24,813 p=32615 u=jomitsch |  TASK [backup : copy backup output to file] *************************************
+2017-06-07 13:41:24,813 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:41:24 -0400 (0:04:20.405)       0:04:26.676 ******** 
+2017-06-07 13:41:25,158 p=32615 u=jomitsch |  changed: [192.168.121.46 -> localhost]
+2017-06-07 13:41:25,160 p=32615 u=jomitsch |  TASK [backup : get backup directory] *******************************************
+2017-06-07 13:41:25,160 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:41:25 -0400 (0:00:00.347)       0:04:27.023 ******** 
+2017-06-07 13:41:25,459 p=32615 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:41:25,460 p=32615 u=jomitsch |   [WARNING]: Consider using template or lineinfile module rather than running sed
+
+2017-06-07 13:41:25,461 p=32615 u=jomitsch |  TASK [backup : check backup directory for config files] ************************
+2017-06-07 13:41:25,462 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:41:25 -0400 (0:00:00.301)       0:04:27.325 ******** 
+2017-06-07 13:41:25,638 p=32615 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:41:25,640 p=32615 u=jomitsch |  TASK [backup : fail if config files are not present] ***************************
+2017-06-07 13:41:25,640 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:41:25 -0400 (0:00:00.178)       0:04:27.503 ******** 
+2017-06-07 13:41:25,663 p=32615 u=jomitsch |  fatal: [192.168.121.46]: FAILED! => {"failed": true, "msg": "The conditional check 'not config_files.stat.exits' failed. The error was: error while evaluating conditional (not config_files.stat.exits): 'dict object' has no attribute 'exits'\n\nThe error appears to have been in '/home/jomitsch/katello-backup-restore-test/roles/backup/tasks/main.yml': line 44, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n- name: fail if config files are not present\n  ^ here\n"}
+2017-06-07 13:41:25,664 p=32615 u=jomitsch |  	to retry, use: --limit @/home/jomitsch/katello-backup-restore-test/test-backup-restore.retry
+
+2017-06-07 13:41:25,664 p=32615 u=jomitsch |  PLAY RECAP *********************************************************************
+2017-06-07 13:41:25,664 p=32615 u=jomitsch |  192.168.121.46             : ok=8    changed=4    unreachable=0    failed=1   
+2017-06-07 13:41:25,664 p=32615 u=jomitsch |  Wednesday 07 June 2017  13:41:25 -0400 (0:00:00.024)       0:04:27.528 ******** 
+2017-06-07 13:41:25,664 p=32615 u=jomitsch |  =============================================================================== 
+2017-06-07 13:41:25,664 p=32615 u=jomitsch |  backup : run katello-backup ------------------------------------------- 260.41s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : install the latest version of git ------------------------------ 2.57s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  setup ------------------------------------------------------------------- 1.91s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : clone katello-packaging ---------------------------------------- 1.42s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : copy backup output to file ------------------------------------- 0.35s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : get backup directory ------------------------------------------- 0.30s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : creates backup directory --------------------------------------- 0.28s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : check backup directory for config files ------------------------ 0.18s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : checkout PR branch --------------------------------------------- 0.03s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : Check that mandatory variables are updated --------------------- 0.03s
+2017-06-07 13:41:25,665 p=32615 u=jomitsch |  backup : fail if config files are not present --------------------------- 0.02s
+2017-06-07 13:41:46,693 p=511 u=jomitsch |  PLAY [katello] *****************************************************************
+2017-06-07 13:41:46,714 p=511 u=jomitsch |  TASK [setup] *******************************************************************
+2017-06-07 13:41:46,714 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:46 -0400 (0:00:00.024)       0:00:00.024 ******** 
+2017-06-07 13:41:48,282 p=511 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:41:48,285 p=511 u=jomitsch |  TASK [backup : Check that mandatory variables are updated] *********************
+2017-06-07 13:41:48,285 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:48 -0400 (0:00:01.571)       0:00:01.595 ******** 
+2017-06-07 13:41:48,316 p=511 u=jomitsch |  skipping: [192.168.121.46]
+2017-06-07 13:41:48,318 p=511 u=jomitsch |  TASK [backup : install the latest version of git] ******************************
+2017-06-07 13:41:48,318 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:48 -0400 (0:00:00.032)       0:00:01.628 ******** 
+2017-06-07 13:41:50,956 p=511 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:41:50,959 p=511 u=jomitsch |  TASK [backup : clone katello-packaging] ****************************************
+2017-06-07 13:41:50,960 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:50 -0400 (0:00:02.641)       0:00:04.270 ******** 
+2017-06-07 13:41:52,324 p=511 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:41:52,327 p=511 u=jomitsch |  TASK [backup : checkout PR branch] *********************************************
+2017-06-07 13:41:52,327 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:52 -0400 (0:00:01.367)       0:00:05.637 ******** 
+2017-06-07 13:41:52,362 p=511 u=jomitsch |  skipping: [192.168.121.46]
+2017-06-07 13:41:52,364 p=511 u=jomitsch |  TASK [backup : creates backup directory] ***************************************
+2017-06-07 13:41:52,364 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:52 -0400 (0:00:00.037)       0:00:05.674 ******** 
+2017-06-07 13:41:52,632 p=511 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:41:52,634 p=511 u=jomitsch |  TASK [backup : run katello-backup] *********************************************
+2017-06-07 13:41:52,634 p=511 u=jomitsch |  Wednesday 07 June 2017  13:41:52 -0400 (0:00:00.269)       0:00:05.944 ******** 
+2017-06-07 13:48:29,304 p=511 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:48:29,307 p=511 u=jomitsch |  TASK [backup : copy backup output to file] *************************************
+2017-06-07 13:48:29,308 p=511 u=jomitsch |  Wednesday 07 June 2017  13:48:29 -0400 (0:06:36.673)       0:06:42.618 ******** 
+2017-06-07 13:48:29,661 p=511 u=jomitsch |  changed: [192.168.121.46 -> localhost]
+2017-06-07 13:48:29,662 p=511 u=jomitsch |  TASK [backup : get backup directory] *******************************************
+2017-06-07 13:48:29,663 p=511 u=jomitsch |  Wednesday 07 June 2017  13:48:29 -0400 (0:00:00.354)       0:06:42.972 ******** 
+2017-06-07 13:48:29,867 p=511 u=jomitsch |  changed: [192.168.121.46]
+2017-06-07 13:48:29,868 p=511 u=jomitsch |   [WARNING]: Consider using template or lineinfile module rather than running sed
+
+2017-06-07 13:48:29,870 p=511 u=jomitsch |  TASK [backup : check backup directory for config files] ************************
+2017-06-07 13:48:29,870 p=511 u=jomitsch |  Wednesday 07 June 2017  13:48:29 -0400 (0:00:00.207)       0:06:43.180 ******** 
+2017-06-07 13:48:30,042 p=511 u=jomitsch |  ok: [192.168.121.46]
+2017-06-07 13:48:30,044 p=511 u=jomitsch |  TASK [backup : fail if config files are not present] ***************************
+2017-06-07 13:48:30,044 p=511 u=jomitsch |  Wednesday 07 June 2017  13:48:30 -0400 (0:00:00.174)       0:06:43.354 ******** 
+2017-06-07 13:48:30,074 p=511 u=jomitsch |  fatal: [192.168.121.46]: FAILED! => {"changed": false, "failed": true, "msg": "config_files.tar.gz are not present in backup directory"}
+2017-06-07 13:48:30,075 p=511 u=jomitsch |  	to retry, use: --limit @/home/jomitsch/katello-backup-restore-test/test-backup-restore.retry
+
+2017-06-07 13:48:30,075 p=511 u=jomitsch |  PLAY RECAP *********************************************************************
+2017-06-07 13:48:30,075 p=511 u=jomitsch |  192.168.121.46             : ok=8    changed=4    unreachable=0    failed=1   
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  Wednesday 07 June 2017  13:48:30 -0400 (0:00:00.031)       0:06:43.385 ******** 
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  =============================================================================== 
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : run katello-backup ------------------------------------------- 396.67s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : install the latest version of git ------------------------------ 2.64s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  setup ------------------------------------------------------------------- 1.57s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : clone katello-packaging ---------------------------------------- 1.37s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : copy backup output to file ------------------------------------- 0.35s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : creates backup directory --------------------------------------- 0.27s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : get backup directory ------------------------------------------- 0.21s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : check backup directory for config files ------------------------ 0.17s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : checkout PR branch --------------------------------------------- 0.04s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : Check that mandatory variables are updated --------------------- 0.03s
+2017-06-07 13:48:30,076 p=511 u=jomitsch |  backup : fail if config files are not present --------------------------- 0.03s
