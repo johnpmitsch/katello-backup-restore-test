@@ -1,5 +1,5 @@
 [all:vars]
 pr_number=changeme
-use_master_branch=false # will override pr_number
+use_master_branch=False
 
 [katello]

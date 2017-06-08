@@ -1,3 +1,6 @@
 inventory
+logs/*
 *.retry
 *.pyc
+*.swp
+*.swo

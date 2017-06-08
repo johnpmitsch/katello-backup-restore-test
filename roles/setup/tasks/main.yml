@@ -1,0 +1,30 @@
+- name: Check that mandatory variables are updated
+  fail: msg="Please update the variables in inventory/inventory (after copying inventory/inventory.sample)"
+  when: pr_number == "changeme" and not use_master_branch
+
+- name: install the latest version of git
+  yum:
+    name: git
+    state: latest
+
+- name: remove katello-packaging
+  file: 
+    path: /katello-packaging
+    state: absent
+
+- name: clone katello-packaging
+  git:
+    repo: https://github.com/Katello/katello-packaging.git 
+    dest: /katello-packaging
+    refspec: '+refs/pull/*:refs/heads/*'
+
+- name: checkout PR branch
+  command: git checkout {{ pr_number }}/head
+  args:
+    chdir: /katello-packaging
+  when: not use_master_branch
+
+- name: creates backup directory
+  file: 
+    path: /backup
+    state: directory
