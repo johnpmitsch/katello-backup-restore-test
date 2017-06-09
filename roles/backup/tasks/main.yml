@@ -1,49 +1,29 @@
-- name: remove standard backup output file
+- name: "remove {{ backup_type }} backup output file"
   file: 
     path: /tmp/standard-backup.txt
     state: absent
 
 - name: run katello-backup
-  command: /katello-packaging/katello/katello-backup /backup
-  register: standard_backup_output
+  command: "/katello-packaging/katello/katello-backup {{ backup_args }} /backup"
+  register: backup_output
   become: root
 
 - name: copy backup output to file
   copy: 
-    content: "{{ standard_backup_output.stdout }}"
-    dest: /tmp/standard-backup.txt
+    content: "{{ backup_output.stdout }}"
+    dest: "/tmp/{{ backup_type }}-backup.txt"
 
-- name: get standard backup directory
-  shell: "sed -n 2p /tmp/standard-backup.txt | awk '{print $4}'"
-  register: standard_backup_dir
-
-- name: remove online backup output file
-  file: 
-    path: /tmp/online-backup.txt
-    state: absent
-
-- name: run katello-backup online
-  command: /katello-packaging/katello/katello-backup --online /backup
-  register: online_backup_output
-  become: root
-
-- name: copy backup output to file
-  copy: 
-    content: "{{ online_backup_output.stdout }}"
-    dest: /tmp/online-backup.txt
-
-- name: get online backup directory
-  shell: "sed -n 2p /tmp/online-backup.txt | awk '{print $4}'"
-  register: online_backup_dir
+- name: "get {{ backup_type }} backup directory"
+  shell: "sed -n 2p /tmp/{{ backup_type }}-backup.txt | awk '{print $4}'"
+  register: backup_dir
 
 - name: check standard backup files
   backup_files_exist:
-    good_files: ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"]
-    bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump"]
-    directory: "{{ standard_backup_dir.stdout }}"
+    good_files: "{{ good_files }}"
+    bad_files: "{{ bad_files }}"
+    directory: "{{ backup_dir.stdout }}"
 
-- name: check online backup files
-  backup_files_exist:
-    good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"]
-    bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz"]
-    directory: "{{ online_backup_dir.stdout }}"
+- name: run katello-restore
+  command: "yes | /katello-packaging/katello/katello-restore {{ backup_args }} {{ backup_dir.stdout }}"
+  register: backup_output
+  become: root
