@@ -17,13 +17,18 @@
   shell: "sed -n 2p /tmp/{{ backup_type }}-backup.txt | awk '{print $4}'"
   register: backup_dir
 
-- name: check standard backup files
+- name: check {{ backup_type }} backup files
   backup_files_exist:
     good_files: "{{ good_files }}"
     bad_files: "{{ bad_files }}"
     directory: "{{ backup_dir.stdout }}"
 
-- name: run katello-restore
-  command: "yes | /katello-packaging/katello/katello-restore {{ backup_args }} {{ backup_dir.stdout }}"
-  register: backup_output
+- name: run {{ backup_type }} katello-restore
+  command: "/katello-packaging/katello/katello-restore -y {{ backup_dir.stdout }}"
   become: root
+
+- name: "remove {{ backup_type }} directory"
+  file:
+    path: "{{ backup_dir.stdout }}"
+    state: absent
+  when: clean_up_backup_dir
