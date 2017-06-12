@@ -1,5 +1,5 @@
 inventory
-logs/*
+#logs/*
 *.retry
 *.pyc
 *.swp
