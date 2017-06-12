@@ -1,1 +1,2 @@
 backup_args: ""
+clean_up_backup_dir: true
