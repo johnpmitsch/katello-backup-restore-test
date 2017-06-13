@@ -3,7 +3,7 @@ For testing of katello [backup/restore/hostname-change](https://github.com/Katel
 
 ## Prerequisites ##
 - Ansible 2.2
-- A production Katello instance (latest version) populated with some data.
+- A production Katello instance (latest version) populated with some data. Use a machine with more than 8GB RAM to avoid installer errors
 
 ## Quick Setup ##
 *Its a good idea to snapshot your machine before running tests, you can always revert it to have a clean environment*
