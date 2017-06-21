@@ -4,4 +4,6 @@ use_master_branch=False
 clean_up_backup_dir=True
 
 [katello]
-xxx.xxx.xxx.xxx
+
+[foreman-proxy
+

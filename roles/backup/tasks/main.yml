@@ -24,8 +24,9 @@
     directory: "{{ backup_dir.stdout }}"
 
 - name: run {{ backup_type }} katello-restore
-  command: "/katello-packaging/katello/katello-restore -y {{ backup_dir.stdout }}"
+  command: "/katello-packaging/katello/katello-restore -y -d {{ backup_dir.stdout }}"
   become: root
+  when: run_restore
 
 - name: "remove {{ backup_type }} directory"
   file:
