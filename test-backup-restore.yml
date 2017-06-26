@@ -33,6 +33,13 @@
         good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
         bad_files: []
       }
+    - { role: backup,
+        backup_type: with-features,
+        backup_args: --features all,
+        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
+        bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump"]
+      }
+
 
 - hosts: foreman-proxy
   remote_user: root
@@ -40,32 +47,38 @@
     - setup
     - { role: backup,
         backup_type: standard,
-        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz"],
+        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pulp_data.tar"],
         bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump"]
       }
     - { role: backup,
         backup_type: online,
         backup_args: --online,
-        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump"],
-        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz"]
+        good_files: ["config_files.tar.gz",  "mongo_dump", "pulp_data.tar"],
+        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz", "foreman.dump", "candlepin.dump"]
       }
     - { role: backup,
         backup_type: standard-without-pulp-content,
         backup_args: --skip-pulp-content,
-        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz"],
+        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz"],
         bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"],
         run_restore: False
       }
     - { role: backup,
         backup_type: online-without-pulp-content,
         backup_args: --online --skip-pulp-content,
-        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump"],
-        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
+        good_files: ["config_files.tar.gz", "mongo_dump"],
+        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar", "foreman.dump", "candlepin.dump"],
         run_restore: False
       }
     - { role: backup,
         backup_type: logical,
         backup_args: --logical-db-backup,
-        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "mongo_data.tar.gz", "pgsql_data.tar.gz"],
-        bad_files: []
+        good_files: ["config_files.tar.gz", "mongo_dump", "mongo_data.tar.gz", "pulp_data.tar"],
+        bad_files: ["foreman.dump", "candlepin.dump", "pgsql_data.tar.gz"]
+      }
+    - { role: backup,
+        backup_type: with-features,
+        backup_args: --features all,
+        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pulp_data.tar"],
+        bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump"]
       }
