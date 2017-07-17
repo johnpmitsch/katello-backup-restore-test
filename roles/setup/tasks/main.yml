@@ -24,6 +24,18 @@
     chdir: /katello-packaging
   when: not use_master_branch
 
+- name: git fetch all
+  command: git fetch --all
+  args:
+    chdir: /katello-packaging
+  when: not use_master_branch
+
+- name: git rebase with master
+  command: git rebase origin/master
+  args:
+    chdir: /katello-packaging
+  when: not use_master_branch
+
 - name: creates backup directory
   file: 
     path: /backup

@@ -1,35 +1,26 @@
-- name: "remove {{ backup_type }} backup output file"
+- name: "create unique backup directory"
   file: 
-    path: /tmp/standard-backup.txt
-    state: absent
+    path: "/backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
+    state: directory
 
 - name: run katello-backup
-  command: "/katello-packaging/katello/katello-backup {{ backup_args }} /backup"
+  command: "/katello-packaging/katello/katello-backup -y {{ backup_args }} --preserve-dir /backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
   register: backup_output
   become: root
-
-- name: copy backup output to file
-  copy: 
-    content: "{{ backup_output.stdout }}"
-    dest: "/tmp/{{ backup_type }}-backup.txt"
-
-- name: "get {{ backup_type }} backup directory"
-  shell: "sed -n 2p /tmp/{{ backup_type }}-backup.txt | awk '{print $4}'"
-  register: backup_dir
 
 - name: check {{ backup_type }} backup files
   backup_files_exist:
     good_files: "{{ good_files }}"
     bad_files: "{{ bad_files }}"
-    directory: "{{ backup_dir.stdout }}"
+    directory: "/backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
 
 - name: run {{ backup_type }} katello-restore
-  command: "/katello-packaging/katello/katello-restore -y -d {{ backup_dir.stdout }}"
+  command: "/katello-packaging/katello/katello-restore -y -d  /backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
   become: root
   when: run_restore
 
 - name: "remove {{ backup_type }} directory"
   file:
-    path: "{{ backup_dir.stdout }}"
+    path: "/backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
     state: absent
   when: clean_up_backup_dir
