@@ -5,5 +5,5 @@ clean_up_backup_dir=True
 
 [katello]
 
-[foreman-proxy
+[foreman-proxy]
 

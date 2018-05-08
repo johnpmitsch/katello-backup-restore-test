@@ -1,26 +1,41 @@
 - name: "create unique backup directory"
   file: 
-    path: "/backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
+    path: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
     state: directory
 
+- name: check for postgres user
+  getent: 
+    database: passwd 
+    key: postgres
+  register: postgres_user
+  ignore_errors: yes
+
+- name: change owner of backup directory to postgres
+  file:
+    path: "/backup"
+    owner: postgres
+    group: postgres
+    recurse: yes
+  when: postgres_user is success
+
 - name: run katello-backup
-  command: "/katello-packaging/katello/katello-backup -y {{ backup_args }} --preserve-dir /backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
+  command: "/foreman_maintain/bin/foreman-maintain backup {{ backup_type }} -y {{ backup_args }} -p /backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
   register: backup_output
   become: root
 
-- name: check {{ backup_type }} backup files
+- name: check {{ backup_name }} backup files
   backup_files_exist:
     good_files: "{{ good_files }}"
     bad_files: "{{ bad_files }}"
-    directory: "/backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
+    directory: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
 
-- name: run {{ backup_type }} katello-restore
-  command: "/katello-packaging/katello/katello-restore -y -d  /backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
+- name: run {{ backup_name }} katello-restore
+  command: "/foreman_maintain/bin/foreman-maintain restore -y /backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
   become: root
   when: run_restore
 
-- name: "remove {{ backup_type }} directory"
+- name: "remove {{ backup_name }} directory"
   file:
-    path: "/backup/{{ backup_type }}{{ ansible_date_time.epoch }}"
+    path: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
     state: absent
   when: clean_up_backup_dir

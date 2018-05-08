@@ -7,33 +7,33 @@
     name: git
     state: latest
 
-- name: remove katello-packaging
+- name: remove foreman_maintain
   file: 
-    path: /katello-packaging
+    path: /foreman_maintain
     state: absent
 
-- name: clone katello-packaging
+- name: clone foreman_maintain
   git:
-    repo: https://github.com/Katello/katello-packaging.git 
-    dest: /katello-packaging
+    repo: https://github.com/theforeman/foreman_maintain.git 
+    dest: /foreman_maintain
     refspec: '+refs/pull/*:refs/heads/*'
 
 - name: checkout PR branch
   command: git checkout {{ pr_number }}/head
   args:
-    chdir: /katello-packaging
+    chdir: /foreman_maintain
   when: not use_master_branch
 
 - name: git fetch all
   command: git fetch --all
   args:
-    chdir: /katello-packaging
+    chdir: /foreman_maintain
   when: not use_master_branch
 
 - name: git rebase with master
   command: git rebase origin/master
   args:
-    chdir: /katello-packaging
+    chdir: /foreman_maintain
   when: not use_master_branch
 
 - name: creates backup directory

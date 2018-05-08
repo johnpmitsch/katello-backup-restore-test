@@ -1,9 +1,9 @@
 # Katello-backup-restore-test #
-For testing of katello [backup/restore/hostname-change](https://github.com/Katello/katello-packaging/tree/master/katello)
+For testing of foreman-maintain [backup/restore](https://github.com/theforeman/foreman_maintain)
 
 ## Prerequisites ##
-- Ansible 2.2
-- A production Katello instance (latest version) populated with some data. Use a machine with more than 8GB RAM to avoid installer errors
+- Ansible 2.5+
+- A production Katello instance (latest version)
 
 ## Quick Setup ##
 *Its a good idea to snapshot your machine before running tests, you can always revert it to have a clean environment*
