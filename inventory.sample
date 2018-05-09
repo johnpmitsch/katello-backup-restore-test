@@ -7,3 +7,4 @@ clean_up_backup_dir=True
 
 [foreman-proxy]
 
+[katello-remote-db]
