@@ -1,3 +1,10 @@
 backup_args: ""
 clean_up_backup_dir: true
 run_restore: true
+katello_username: admin
+katello_password: changeme
+organization_id: 1
+hammer_check: false
+hammer_base: "hammer -u {{ katello_username }} -p {{ katello_password }}" 
+get_repo_count: "{{ hammer_base }} --csv repository list --organization-id {{ organization_id }} | wc -l"
+directory_location: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"

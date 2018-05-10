@@ -1,3 +1,46 @@
+- hosts: katello
+  remote_user: root
+  roles:
+    - setup
+    - { role: backup,
+        backup_name: offline,
+        backup_type: offline,
+        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
+        bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump"],
+        hammer_check: true
+      }
+    - { role: backup,
+        backup_name: online,
+        backup_type: online,
+        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"],
+        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz"],
+        hammer_check: true
+      }
+    - { role: backup,
+        backup_name: standard-without-pulp-content,
+        backup_type: offline,
+        backup_args: --skip-pulp-content,
+        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz"],
+        bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"],
+        hammer_check: true
+      }
+    - { role: backup,
+        backup_name: online-without-pulp-content,
+        backup_type: online,
+        backup_args: --skip-pulp-content,
+        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump"],
+        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
+        hammer_check: true
+      }
+    - { role: backup,
+        backup_name: logical,
+        backup_type: offline,
+        backup_args: --include-db-dumps,
+        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
+        bad_files: [],
+        hammer_check: true
+      }
+
 - hosts: katello-remote-db
   remote_user: root
   roles:
@@ -33,44 +76,6 @@
         backup_type: offline,
         backup_args: --include-db-dumps,
         good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"],
-        bad_files: []
-      }
-
-- hosts: katello
-  remote_user: root
-  roles:
-    - setup
-    - { role: backup,
-        backup_name: offline,
-        backup_type: offline,
-        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
-        bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump"]
-      }
-    - { role: backup,
-        backup_name: online,
-        backup_type: online,
-        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"],
-        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz"]
-      }
-    - { role: backup,
-        backup_name: standard-without-pulp-content,
-        backup_type: offline,
-        backup_args: --skip-pulp-content,
-        good_files:  ["config_files.tar.gz", "mongo_data.tar.gz", "pgsql_data.tar.gz"],
-        bad_files: ["foreman.dump", "candlepin.dump", "mongo_dump", "pulp_data.tar"],
-      }
-    - { role: backup,
-        backup_name: online-without-pulp-content,
-        backup_type: online,
-        backup_args: --skip-pulp-content,
-        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump"],
-        bad_files: ["mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
-      }
-    - { role: backup,
-        backup_name: logical,
-        backup_type: offline,
-        backup_args: --include-db-dumps,
-        good_files: ["config_files.tar.gz", "foreman.dump", "candlepin.dump", "mongo_dump", "mongo_data.tar.gz", "pgsql_data.tar.gz", "pulp_data.tar"],
         bad_files: []
       }
 

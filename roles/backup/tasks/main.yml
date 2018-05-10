@@ -1,6 +1,6 @@
 - name: "create unique backup directory"
   file: 
-    path: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
+    path: "{{ directory_location }}"
     state: directory
 
 - name: check for postgres user
@@ -18,24 +18,78 @@
     recurse: yes
   when: postgres_user is success
 
-- name: run katello-backup
-  command: "/foreman_maintain/bin/foreman-maintain backup {{ backup_type }} -y {{ backup_args }} -p /backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: orig_repo_count
+  when: hammer_check
+
+- name: create product
+  command: "{{ hammer_base }} product create --name ecorp --organization-id {{ organization_id }}"
+  when: hammer_check
+
+- name: create repository
+  command: "{{ hammer_base }} repository create --organization-id {{ organization_id }} --product ecorp --name steelmountain --url https://google.com --content-type yum"
+  when: hammer_check
+  
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: before_backup_repo_count
+  when: hammer_check
+
+- name: assert repo created
+  assert:
+    that:
+      - before_backup_repo_count.stdout | int == orig_repo_count.stdout | int + 1
+  when: hammer_check
+
+- name: run {{ backup_name }} backup
+  command: "/foreman_maintain/bin/foreman-maintain backup {{ backup_type }} -y {{ backup_args }} -p {{ directory_location }}"
   register: backup_output
   become: root
+
+- name: delete product
+  command: "{{ hammer_base }} product delete --name ecorp --organization-id 1"
+  when: hammer_check
+
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: after_backup_repo_count
+  when: hammer_check
+
+- name: assert repo created
+  assert:
+    that:
+      - after_backup_repo_count.stdout | int == orig_repo_count.stdout | int
+  when: hammer_check
 
 - name: check {{ backup_name }} backup files
   backup_files_exist:
     good_files: "{{ good_files }}"
     bad_files: "{{ bad_files }}"
-    directory: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
+    directory: "{{ directory_location }}"
 
-- name: run {{ backup_name }} katello-restore
-  command: "/foreman_maintain/bin/foreman-maintain restore -y /backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
+- name: run {{ backup_name }} restore
+  command: "/foreman_maintain/bin/foreman-maintain restore -y {{ directory_location }}"
   become: root
   when: run_restore
 
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: after_restore_repo_count
+  when: hammer_check
+
+- name: assert repo restored
+  assert:
+    that:
+      - after_restore_repo_count.stdout | int == orig_repo_count.stdout | int + 1
+  when: hammer_check
+
 - name: "remove {{ backup_name }} directory"
   file:
-    path: "/backup/{{ backup_name }}{{ ansible_date_time.epoch }}"
+    path: "{{ directory_location }}"
     state: absent
   when: clean_up_backup_dir
+
+- name: "remove test product"
+  command: "{{ hammer_base }} product delete --name ecorp --organization-id {{ organization_id }}"
+  when: hammer_check
