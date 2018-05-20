@@ -18,6 +18,11 @@
     recurse: yes
   when: postgres_user is success
 
+- name: "remove test product"
+  command: "{{ hammer_base }} product delete --name ecorp --organization-id {{ organization_id }}"
+  when: hammer_check
+  ignore_errors: yes
+
 - name: get repo count
   shell: "{{ get_repo_count }}"
   register: orig_repo_count
