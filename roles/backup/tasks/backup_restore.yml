@@ -1,0 +1,103 @@
+- set_fact:
+    directory_location: "/backup/{{ item }}{{ ansible_date_time.epoch }}"
+
+- name: "create unique backup directory"
+  file: 
+    path: "{{ directory_location }}"
+    state: directory
+
+- name: check for postgres user
+  getent: 
+    database: passwd 
+    key: postgres
+  register: postgres_user
+  ignore_errors: yes
+
+- name: change owner of backup directory to postgres
+  file:
+    path: "/backup"
+    owner: postgres
+    group: postgres
+    recurse: yes
+  when: postgres_user is success
+
+- name: "remove test product"
+  command: "{{ hammer_base }} product delete --name ecorp --organization-id {{ organization_id }}"
+  when: hammer_check
+  ignore_errors: yes
+
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: orig_repo_count
+  when: hammer_check
+
+- name: create product
+  command: "{{ hammer_base }} product create --name ecorp --organization-id {{ organization_id }}"
+  when: hammer_check
+
+- name: create repository
+  command: "{{ hammer_base }} repository create --organization-id {{ organization_id }} --product ecorp --name steelmountain --url https://google.com --content-type yum"
+  when: hammer_check
+  
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: before_backup_repo_count
+  when: hammer_check
+
+- name: assert repo created
+  assert:
+    that:
+      - before_backup_repo_count.stdout | int == orig_repo_count.stdout | int + 1
+  when: hammer_check
+
+- name: run {{ item }} backup
+  command: "/foreman_maintain/bin/foreman-maintain backup {{ item }} -y {{ scenarios[item]['backup_args'] }} -p {{ directory_location }}"
+  register: backup_output
+  become: root
+
+- name: delete product
+  command: "{{ hammer_base }} product delete --name ecorp --organization-id 1"
+  when: hammer_check
+
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: after_backup_repo_count
+  when: hammer_check
+
+- name: assert repo created
+  assert:
+    that:
+      - after_backup_repo_count.stdout | int == orig_repo_count.stdout | int
+  when: hammer_check
+
+- name: "check {{ item }} backup files"
+  backup_files_exist:
+    good_files: "{{ scenarios[item]['good_files'] }}"
+    bad_files: "{{ scenarios[item]['bad_files'] }}"
+    directory: "{{ directory_location }}"
+
+- name: "run {{ item }} restore"
+  command: "/foreman_maintain/bin/foreman-maintain restore -y {{ directory_location }}"
+  become: root
+  when: run_restore
+
+- name: get repo count
+  shell: "{{ get_repo_count }}"
+  register: after_restore_repo_count
+  when: hammer_check
+
+- name: assert repo restored
+  assert:
+    that:
+      - after_restore_repo_count.stdout | int == orig_repo_count.stdout | int + 1
+  when: hammer_check
+
+- name: "remove {{ item }} directory"
+  file:
+    path: "{{ directory_location }}"
+    state: absent
+  when: clean_up_backup_dir
+
+- name: "remove test product"
+  command: "{{ hammer_base }} product delete --name ecorp --organization-id {{ organization_id }}"
+  when: hammer_check

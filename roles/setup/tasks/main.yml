@@ -1,5 +1,5 @@
 - name: Check that mandatory variables are updated
-  fail: msg="Please update the variables in inventory/inventory (after copying inventory/inventory.sample)"
+  fail: msg="Please declare either pr_number or use_master_branch using --extra-vars"
   when: pr_number == "changeme" and not use_master_branch
 
 - name: install the latest version of git

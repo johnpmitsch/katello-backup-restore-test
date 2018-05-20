@@ -1,0 +1,6 @@
+- hosts: katello foreman-proxy katello-remote-db
+  remote_user: root
+  any_errors_fatal: true
+  roles:
+    - setup
+    - backup
