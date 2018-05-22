@@ -51,7 +51,7 @@
   when: hammer_check
 
 - name: run {{ item }} backup
-  command: "/foreman_maintain/bin/foreman-maintain backup {{ item }} -y {{ scenarios[item]['backup_args'] }} -p {{ directory_location }}"
+  command: "/foreman_maintain/bin/foreman-maintain backup {{ scenarios[item]['backup_type'] }} -y {{ scenarios[item]['backup_args'] }} -p {{ directory_location }}"
   register: backup_output
   become: root
 

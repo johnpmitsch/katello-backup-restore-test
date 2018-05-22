@@ -1,6 +1,7 @@
-inventory
+inventory/inventory
 logs/*
 *.retry
 *.pyc
 *.swp
 *.swo
+*.swn
